@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Delicacies | Aesthetic Dining</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --baby-pink: #fff0f5;
+            --soft-pink: #fce4ec;
+            --accent-pink: #f06292;
+            --deep-pink: #d81b60;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fffafb;
+            color: #333;
+        }
+
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .font-cursive { font-family: 'Dancing Script', cursive; }
+
+        .pink-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(240, 98, 146, 0.1);
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .category-btn.active {
+            background-color: var(--accent-pink);
+            color: white;
+            box-shadow: 0 4px 15px rgba(240, 98, 146, 0.3);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float-anim { animation: float 5s ease-in-out infinite; }
+
+        .custom-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast" class="custom-toast font-medium">Added to your order! ✨</div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 py-4 px-6">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <div class="w-10 h-10 bg-[#f06292] rounded-full flex items-center justify-center text-white shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <span class="text-2xl font-bold text-[#f06292] font-serif">The Delicacies</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 font-semibold text-gray-700">
+                <a href="#home" class="hover:text-[#f06292] transition-colors">Home</a>
+                <a href="#menu" class="hover:text-[#f06292] transition-colors">Menu</a>
+                <a href="#about" class="hover:text-[#f06292] transition-colors">Our Story</a>
+                <a href="#gallery" class="hover:text-[#f06292] transition-colors">Gallery</a>
+                <div class="relative">
+                    <button class="bg-[#f06292] text-white px-6 py-2 rounded-full hover:bg-[#d81b60] transition-all flex items-center gap-2">
+                        <span>Cart</span>
+                        <span id="cart-count" class="bg-white text-[#f06292] w-5 h-5 rounded-full text-xs flex items-center justify-center">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <button class="md:hidden text-[#f06292]" onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+        
+        <!-- Mobile Nav -->
+        <div id="mobile-nav" class="hidden md:hidden absolute top-full left-0 w-full bg-white p-6 shadow-xl border-t border-pink-100 space-y-4 text-center">
+            <a href="#home" class="block">Home</a>
+            <a href="#menu" class="block">Menu</a>
+            <a href="#about" class="block">Our Story</a>
+            <a href="#gallery" class="block">Gallery</a>
+            <button class="w-full bg-[#f06292] text-white py-3 rounded-xl">Order Online</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-[#fffafb]">
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-[#fce4ec] rounded-full blur-[100px] opacity-60"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#fdf0f4] to-transparent"></div>
+
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 relative z-10 items-center">
+            <div class="space-y-8">
+                <p class="font-cursive text-3xl text-[#f06292]">Culinary Artistry...</p>
+                <h1 class="text-6xl md:text-8xl font-bold leading-tight text-gray-800">
+                    Dine In or <br> <span class="text-[#f06292]">Delivered.</span>
+                </h1>
+                <p class="text-xl text-gray-600 max-w-lg leading-relaxed">
+                    Crafted like cinema—whether at our table or yours. Experience the finest flavors of Hyderabad in a boutique setting.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <a href="#menu" class="px-10 py-4 bg-[#f06292] text-white rounded-full text-lg font-bold hover:shadow-2xl hover:scale-105 transition-all">Explore Menu</a>
+                    <a href="#" class="px-10 py-4 border-2 border-[#f06292] text-[#f06292] rounded-full text-lg font-bold hover:bg-pink-50 transition-all">Order Online</a>
+                </div>
+            </div>
+            <div class="relative flex justify-center">
+                <div class="float-anim w-full max-w-md">
+                    <div class="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white">
+                        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1000&auto=format&fit=crop" alt="Hero Dish" class="w-full h-full object-cover aspect-[4/5]">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-3xl shadow-xl z-20 border border-pink-100">
+                        <div class="text-[#f06292] font-bold text-2xl">₹180</div>
+                        <div class="text-gray-500 text-sm">Chef's Special</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section (Detailed Reference) -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="scroll-reveal">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 leading-tight">An Experience <br> <span class="text-[#f06292]">Beyond Dining</span></h2>
+                    <p class="text-gray-600 mb-6 text-lg">Where every detail enhances your culinary journey. Our commitment to quality and flavor is what sets us apart.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-[#f06292]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <p class="font-bold text-gray-700">Hand-ground Spices & Herbs</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-[#f06292]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <p class="font-bold text-gray-700">Slow-Cooked Clay Pot Delicacies</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-[#f06292]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <p class="font-bold text-gray-700">Aesthetic Boutique Ambience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 scroll-reveal">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=600&auto=format&fit=crop" class="rounded-3xl shadow-lg mt-10" alt="Grill">
+                    <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=600&auto=format&fit=crop" class="rounded-3xl shadow-lg" alt="Plating">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Menu Section -->
+    <section id="menu" class="py-24 bg-[#fffafb]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 scroll-reveal">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">Our Signature <span class="text-[#f06292]">Creations</span></h2>
+                <p class="text-gray-500">Affordable luxury in every chef-curated plate.</p>
+                
+                <!-- Category Tabs -->
+                <div class="flex flex-wrap justify-center gap-4 mt-12">
+                    <button onclick="filterMenu('all')" class="category-btn active px-8 py-3 rounded-full font-bold transition-all">All Items</button>
+                    <button onclick="filterMenu('grill')" class="category-btn px-8 py-3 rounded-full font-bold bg-white text-gray-700 border border-pink-100 transition-all">From The Grill</button>
+                    <button onclick="filterMenu('signature')" class="category-btn px-8 py-3 rounded-full font-bold bg-white text-gray-700 border border-pink-100 transition-all">Signatures</button>
+                    <button onclick="filterMenu('drinks')" class="category-btn px-8 py-3 rounded-full font-bold bg-white text-gray-700 border border-pink-100 transition-all">Refreshers</button>
+                </div>
+            </div>
+
+            <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Grill Item -->
+                <div class="menu-item grill bg-white p-5 rounded-[2.5rem] border border-pink-50 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="relative h-56 rounded-[2rem] overflow-hidden mb-6">
+                        <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-white/90 px-3 py-1 rounded-full text-xs font-bold text-[#f06292]">Bestseller</div>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Aal Faham Chicken</h3>
+                    <p class="text-gray-500 text-sm mb-4">Smoky Arabian-style grilled chicken with exotic spices.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-[#f06292]">₹240</span>
+                        <button onclick="addToCart()" class="w-12 h-12 bg-pink-50 text-[#f06292] rounded-full flex items-center justify-center hover:bg-[#f06292] hover:text-white transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Signature Item -->
+                <div class="menu-item signature bg-white p-5 rounded-[2.5rem] border border-pink-50 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="relative h-56 rounded-[2rem] overflow-hidden mb-6">
+                        <img src="https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Avakai Chicken Biryani</h3>
+                    <p class="text-gray-500 text-sm mb-4">Spicy mango pickle infused biryani for a unique punch.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-[#f06292]">₹220</span>
+                        <button onclick="addToCart()" class="w-12 h-12 bg-pink-50 text-[#f06292] rounded-full flex items-center justify-center hover:bg-[#f06292] hover:text-white transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Roll Item -->
+                <div class="menu-item signature bg-white p-5 rounded-[2.5rem] border border-pink-50 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="relative h-56 rounded-[2rem] overflow-hidden mb-6">
+                        <img src="https://images.unsplash.com/photo-1626700051175-656fc7ec33be?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Signature Lacha Rolls</h3>
+                    <p class="text-gray-500 text-sm mb-4">Flaky layered rolls filled with savory chicken or paneer.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-[#f06292]">₹150</span>
+                        <button onclick="addToCart()" class="w-12 h-12 bg-pink-50 text-[#f06292] rounded-full flex items-center justify-center hover:bg-[#f06292] hover:text-white transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Drink Item -->
+                <div class="menu-item drinks bg-white p-5 rounded-[2.5rem] border border-pink-50 shadow-sm hover:shadow-xl transition-all group">
+                    <div class="relative h-56 rounded-[2rem] overflow-hidden mb-6">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Hazelnut Cold Coffee</h3>
+                    <p class="text-gray-500 text-sm mb-4">Creamy, rich, and refreshing blend to cool you down.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-2xl font-bold text-[#f06292]">₹130</span>
+                        <button onclick="addToCart()" class="w-12 h-12 bg-pink-50 text-[#f06292] rounded-full flex items-center justify-center hover:bg-[#f06292] hover:text-white transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visual Feast (Gallery) -->
+    <section id="gallery" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-16 scroll-reveal">Visual <span class="text-[#f06292]">Feast</span></h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 scroll-reveal">
+                <div class="aspect-square rounded-3xl overflow-hidden hover-lift"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=600" class="w-full h-full object-cover"></div>
+                <div class="aspect-[3/4] rounded-3xl overflow-hidden hover-lift md:mt-12"><img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=600" class="w-full h-full object-cover"></div>
+                <div class="aspect-square rounded-3xl overflow-hidden hover-lift"><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=600" class="w-full h-full object-cover"></div>
+                <div class="aspect-[3/4] rounded-3xl overflow-hidden hover-lift md:mt-12"><img src="https://images.unsplash.com/photo-1567620905732-2d1ec7bb7445?q=80&w=600" class="w-full h-full object-cover"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Opening Hours (Detailed Reference) -->
+    <section class="py-24 bg-pink-50">
+        <div class="max-w-4xl mx-auto px-6 bg-white rounded-[3rem] p-12 shadow-xl scroll-reveal text-center">
+            <h2 class="text-4xl font-bold mb-8 italic font-serif">Opening Hours</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <p class="font-bold text-[#f06292] mb-2 uppercase tracking-widest text-sm">Mon - Thu</p>
+                    <p class="text-xl text-gray-700">12:30 PM - 12:30 AM</p>
+                </div>
+                <div>
+                    <p class="font-bold text-[#f06292] mb-2 uppercase tracking-widest text-sm">Fri - Sat</p>
+                    <p class="text-xl text-gray-700">12:30 PM - 01:30 AM</p>
+                </div>
+                <div>
+                    <p class="font-bold text-[#f06292] mb-2 uppercase tracking-widest text-sm">Sunday</p>
+                    <p class="text-xl text-gray-700">12:00 PM - 12:30 AM</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#1a1a1a] text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-12 border-b border-gray-800 pb-16 mb-10">
+            <div class="space-y-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-[#f06292] rounded-full flex items-center justify-center text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </div>
+                    <span class="text-2xl font-bold font-serif">The Delicacies</span>
+                </div>
+                <p class="text-gray-400">Authentic Indian flavors reimagined for the modern palate. Best dine-in experience in Hyderabad.</p>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-[#f06292]">Contact Us</h4>
+                <ul class="text-gray-400 space-y-4">
+                    <li><a href="mailto:Sanav.edits@gmail.com" class="hover:text-white transition-colors">Sanav.edits@gmail.com</a></li>
+                    <li>+91 87904 55505</li>
+                    <li>Rampally Main Road, ECIL, <br>Hyderabad - 501301</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-[#f06292]">Quick Links</h4>
+                <ul class="text-gray-400 space-y-4">
+                    <li><a href="#menu" class="hover:text-white">Our Menu</a></li>
+                    <li><a href="#about" class="hover:text-white">Our Story</a></li>
+                    <li><a href="#gallery" class="hover:text-white">Gallery</a></li>
+                    <li><a href="#" class="hover:text-white">Order Online</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 text-[#f06292]">Follow Us</h4>
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f06292] transition-colors cursor-pointer">IG</div>
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f06292] transition-colors cursor-pointer">FB</div>
+                    <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-[#f06292] transition-colors cursor-pointer">TW</div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-600 text-sm">
+            © 2026 The Delicacies. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('bg-white/90', 'backdrop-blur-md', 'shadow-md', 'py-3');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('bg-white/90', 'backdrop-blur-md', 'shadow-md', 'py-3');
+                nav.classList.add('py-4');
+            }
+        });
+
+        // Scroll Reveal
+        const reveals = document.querySelectorAll('.scroll-reveal');
+        function reveal() {
+            reveals.forEach(el => {
+                const windowHeight = window.innerHeight;
+                const revealTop = el.getBoundingClientRect().top;
+                const revealPoint = 150;
+                if (revealTop < windowHeight - revealPoint) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', reveal);
+        window.onload = reveal;
+
+        // Menu Filtering
+        function filterMenu(category) {
+            const items = document.querySelectorAll('.menu-item');
+            const btns = document.querySelectorAll('.category-btn');
+            
+            // Update buttons
+            btns.forEach(btn => btn.classList.remove('active', 'bg-[#f06292]', 'text-white'));
+            event.target.classList.add('active');
+
+            // Filter items
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                    setTimeout(() => item.style.opacity = '1', 10);
+                } else {
+                    item.style.opacity = '0';
+                    setTimeout(() => item.style.display = 'none', 300);
+                }
+            });
+        }
+
+        // Cart Interactivity
+        let count = 0;
+        function addToCart() {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 2000);
+        }
+    </script>
+</body>
+</html>
+
+
